@@ -5,7 +5,7 @@ export const SCRAMBLE_DURATION = 800;
 export const FLIP_DURATION = 300;
 export const STAGGER_DELAY = 25;
 export const TOTAL_TRANSITION = 3800;
-export const MESSAGE_INTERVAL = 8000;
+export const MESSAGE_INTERVAL = 6000;
 
 export const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-!?\'/: ';
 
