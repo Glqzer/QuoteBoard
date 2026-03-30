@@ -1,7 +1,7 @@
 import { Tile } from './Tile.js';
 import {
   GRID_COLS, GRID_ROWS, STAGGER_DELAY, SCRAMBLE_DURATION,
-  TOTAL_TRANSITION, ACCENT_COLORS
+  FLIP_DURATION, ACCENT_COLORS
 } from './constants.js';
 
 export class Board {
@@ -109,10 +109,12 @@ export class Board {
       for (let c = 0; c < this.cols; c++) {
         const newChar = newGrid[r][c];
         const oldChar = this.currentGrid[r][c];
+        const hasTextBeforeOrAfter = oldChar !== ' ' || newChar !== ' ';
 
-        if (newChar !== oldChar) {
+        if (hasTextBeforeOrAfter) {
           const delay = (r * this.cols + c) * STAGGER_DELAY;
-          this.tiles[r][c].scrambleTo(newChar, delay);
+          const force = newChar === oldChar;
+          this.tiles[r][c].scrambleTo(newChar, delay, force);
           hasChanges = true;
         }
       }
@@ -130,10 +132,15 @@ export class Board {
     // Update grid state
     this.currentGrid = newGrid;
 
-    // Clear transitioning flag after animation completes
+    // Clear transitioning flag after the slowest tile can finish.
+    // This avoids overlap between rotations that can leave stale letters.
+    const lastTileDelay = (this.rows * this.cols - 1) * STAGGER_DELAY;
+    const maxTileSettle = SCRAMBLE_DURATION + (2 * FLIP_DURATION) + 100;
+    const unlockDelay = lastTileDelay + maxTileSettle;
+
     setTimeout(() => {
       this.isTransitioning = false;
-    }, TOTAL_TRANSITION + 200);
+    }, unlockDelay);
   }
 
   _formatToGrid(lines) {

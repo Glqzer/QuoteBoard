@@ -3,10 +3,19 @@ import { MESSAGES, MESSAGE_INTERVAL, TOTAL_TRANSITION } from './constants.js';
 export class MessageRotator {
   constructor(board) {
     this.board = board;
-    this.messages = MESSAGES;
+    this.messages = this._shuffleMessages(MESSAGES);
     this.currentIndex = -1;
     this._timer = null;
     this._paused = false;
+  }
+
+  _shuffleMessages(messages) {
+    const shuffled = [...messages];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   }
 
   start() {

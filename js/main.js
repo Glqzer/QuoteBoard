@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', initAudio);
   document.addEventListener('keydown', initAudio);
 
+  // Request fullscreen on page load
+  document.documentElement.requestFullscreen().catch(() => {});
+
   // Start message rotation
   rotator.start();
 

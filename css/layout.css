@@ -11,9 +11,19 @@
   flex-direction: column;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
 /* Header */
 .header {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
   padding: 18px 36px;
@@ -65,6 +75,7 @@
 
 /* Hero */
 .hero {
+  display: none;
   text-align: center;
   padding: 56px 24px 44px;
   flex-shrink: 0;
@@ -130,8 +141,10 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 0 24px 32px;
+  align-items: center;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
 }
 
 /* Fullscreen: hide header+hero, board fills viewport */
