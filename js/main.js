@@ -10,6 +10,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const rotator = new MessageRotator(board);
   const keyboard = new KeyboardController(rotator, soundEngine);
 
+  const requestFullscreenSafe = () => {
+    const el = document.documentElement;
+    const requestFs =
+      el.requestFullscreen ||
+      el.webkitRequestFullscreen ||
+      el.msRequestFullscreen;
+
+    if (typeof requestFs === 'function') {
+      try {
+        const result = requestFs.call(el);
+        if (result && typeof result.catch === 'function') {
+          result.catch(() => {});
+        }
+      } catch (_) {
+        // Ignore fullscreen failures on unsupported/mobile browsers.
+      }
+    }
+  };
+
   // Initialize audio on first user interaction (browser autoplay policy)
   let audioInitialized = false;
   const initAudio = async () => {
@@ -23,11 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', initAudio);
   document.addEventListener('keydown', initAudio);
 
-  // Request fullscreen on page load
-  document.documentElement.requestFullscreen().catch(() => {});
-
   // Start message rotation
   rotator.start();
+
+  // Request fullscreen on page load (best effort)
+  requestFullscreenSafe();
 
   // Volume toggle button in header
   const volumeBtn = document.getElementById('volume-btn');
@@ -47,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
       initAudio();
       boardContainer.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => {
-        document.documentElement.requestFullscreen().catch(() => {});
+        requestFullscreenSafe();
       }, 400);
     });
   }

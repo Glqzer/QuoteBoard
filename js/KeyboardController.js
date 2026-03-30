@@ -54,10 +54,34 @@ export class KeyboardController {
   }
 
   _toggleFullscreen() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
+    const doc = document;
+    const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement;
+
+    if (isFullscreen) {
+      const exitFs = doc.exitFullscreen || doc.webkitExitFullscreen;
+      if (typeof exitFs === 'function') {
+        try {
+          const result = exitFs.call(doc);
+          if (result && typeof result.catch === 'function') {
+            result.catch(() => {});
+          }
+        } catch (_) {
+          // Ignore unsupported fullscreen exit behavior.
+        }
+      }
     } else {
-      document.documentElement.requestFullscreen().catch(() => {});
+      const el = document.documentElement;
+      const requestFs = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (typeof requestFs === 'function') {
+        try {
+          const result = requestFs.call(el);
+          if (result && typeof result.catch === 'function') {
+            result.catch(() => {});
+          }
+        } catch (_) {
+          // Ignore unsupported fullscreen request behavior.
+        }
+      }
     }
   }
 
