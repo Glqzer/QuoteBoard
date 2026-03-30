@@ -1,7 +1,9 @@
 /* Board Container */
 .board {
   --tile-size: clamp(36px, 4.2vw, 62px);
-  --tile-gap: clamp(3px, 0.3vw, 5px);
+  --tile-width-ratio: 0.95;
+  --tile-width: calc(var(--tile-size) * var(--tile-width-ratio));
+  --tile-gap: clamp(2px, 0.24vw, 4px);
 
   position: relative;
   background: #1A1A1A;
@@ -19,7 +21,7 @@
 /* Tile Grid */
 .tile-grid {
   display: grid;
-  grid-template-columns: repeat(var(--grid-cols, 22), var(--tile-size));
+  grid-template-columns: repeat(var(--grid-cols, 22), var(--tile-width));
   grid-template-rows: repeat(var(--grid-rows, 5), var(--tile-size));
   gap: var(--tile-gap);
   justify-content: center;
